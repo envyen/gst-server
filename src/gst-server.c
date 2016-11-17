@@ -10,6 +10,16 @@
 
 #include <gst-server.h>
 
+static void media_configure (GstRTSPMediaFactory *factory, GstRTSPMedia *media)
+{
+	GstElement *pipeline;
+	pipeline = gst_rtsp_media_get_element(media);
+
+	GST_DEBUG_BIN_TO_DOT_FILE(GST_BIN(pipeline), GST_DEBUG_GRAPH_SHOW_ALL, "pipeline");
+	printf("Configured\n");
+
+}
+
 int main (int argc, char *argv[])
 {
 	GMainLoop *loop;
@@ -37,6 +47,8 @@ int main (int argc, char *argv[])
 			"( videotestsrc is-live=1 ! x264enc ! rtph264pay name=pay0 pt=96 )");
 
 	gst_rtsp_media_factory_set_shared (factory, TRUE);
+
+	g_signal_connect (factory, "media-configure", (GCallback) media_configure, factory);
 
 	/* attach the test factory to the /test url */
 	gst_rtsp_mount_points_add_factory (mounts, "/test", factory);
