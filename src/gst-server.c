@@ -44,7 +44,7 @@ int main (int argc, char *argv[])
 	 * element with pay%d names will be a stream */
 	factory = gst_rtsp_media_factory_new ();
 	gst_rtsp_media_factory_set_launch (factory,
-			"( videotestsrc is-live=1 ! x264enc ! rtph264pay name=pay0 pt=96 )");
+			"( udpsrc port=5000 caps=\"application/x-rtp\" ! queue ! rtph264depay ! h264parse ! queue ! rtph264pay name=pay0 pt=96 )");
 
 	gst_rtsp_media_factory_set_shared (factory, TRUE);
 
@@ -61,6 +61,7 @@ int main (int argc, char *argv[])
 
 	/* start serving */
 	g_print ("stream ready at rtsp://127.0.0.1:8554/test\n");
+	system("sleep 10 && cvlc rtsp://127.0.0.1:8554/test &");
 	g_main_loop_run (loop);
 
 	return 0;
