@@ -1,4 +1,4 @@
-
+//gst-launch-1.0 v4l2src ! "video/x-raw,width=640,height=480" ! queue ! x264enc ! h264parse ! rtph264pay name=pay0 pt=96 ! queue ! udpsink port=5000 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
